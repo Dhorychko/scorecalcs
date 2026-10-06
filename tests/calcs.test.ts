@@ -115,7 +115,31 @@ test("SAT/PSAT/ACT estimates", () => {
 test("catalog sanity", () => {
   const slugs = new Set(CALCS.map((c) => c.slug));
   assert.equal(slugs.size, CALCS.length);
-  assert.equal(GPA_VALUES.length, 21);
+  assert.equal(GPA_VALUES.length, 26);
   assert.equal(gpaSlug(3.5), "3-5");
-  assert.equal(AP_EXAMS.length, 33);
+  assert.equal(AP_EXAMS.length, 36);
+});
+
+import { ucGpa, schemeGpa, ASU, LSAC, UF } from "../lib/schools.ts";
+test("UC capped GPA: max 8 honors points, max 4 from 10th grade, C or better", () => {
+  const rows = [
+    ...Array.from({ length: 6 }, () => ({ grade: "A" as const, year: "10" as const, honors: true })),
+    ...Array.from({ length: 6 }, () => ({ grade: "B" as const, year: "11" as const, honors: true })),
+    { grade: "D" as const, year: "11" as const, honors: true },
+  ];
+  const r = ucGpa(rows);
+  assert.equal(r.honorsEarned, 12); // D doesn't earn a point
+  assert.equal(r.honorsUsed, 8); // 4 from 10th + 4 from 11th (cap 8)
+  close(r.unweighted, (6 * 4 + 6 * 3 + 1) / 13);
+  close(r.capped, (6 * 4 + 6 * 3 + 1 + 8) / 13);
+  close(r.fully, (6 * 4 + 6 * 3 + 1 + 12) / 13);
+});
+test("ASU caps cumulative GPA at 4.00; LSAC A+ = 4.33 and dual enrollment toggle", () => {
+  const a = schemeGpa(ASU, [{ grade: "A+", credits: 3 }, { grade: "A+", credits: 3 }]);
+  close(a.gpa, 4.0); close(a.uncapped, 4.33);
+  const rows = [{ grade: "A+", credits: 3 }, { grade: "B", credits: 3, flag: true }];
+  close(schemeGpa(LSAC, rows, true).gpa, 4.33);
+  close(schemeGpa(LSAC, rows, false).gpa, (4.33 * 3 + 3 * 3) / 6);
+  const u = schemeGpa(UF, [{ grade: "A", credits: 1, level: "ap" }, { grade: "B", credits: 1, level: "honors" }]);
+  close(u.gpa, (5 + 3.5) / 2);
 });

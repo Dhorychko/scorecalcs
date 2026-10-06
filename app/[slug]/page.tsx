@@ -18,6 +18,11 @@ const META: Record<string, string> = {
   "test-grade-calculator": "Turn the number of questions you got wrong into a test percentage and letter grade, with a chart showing your score for every number of wrong answers.",
   "gpa-scale-converter": "Convert a GPA between 4.0, 5.0, 10-point and 100-point scales. Compare a weighted 5.0 GPA with a 4.0 requirement or a GPA from another grading system.",
   "act-score-calculator": "Estimate your ACT section scores and composite from the questions you got right on English, Math, Reading and optional Science, updated for the enhanced ACT.",
+  "uc-gpa-calculator": "Calculate your UC GPA: A–G courses from 10th–11th grade, no plus or minus, honors points capped at 8 semesters. Shows capped, fully weighted and unweighted GPA.",
+  "lsac-gpa-calculator": "Calculate your LSAC GPA for law school applications on LSAC's 4.33 scale (A+ = 4.33). Includes the 2027–28 rule that excludes dual-enrollment courses.",
+  "uf-gpa-calculator": "Estimate your University of Florida recalculated GPA: core courses only, +1.0 for AP, IB, AICE and dual enrollment, +0.5 for honors. UF admits average 4.5–4.7.",
+  "ut-gpa-calculator": "UT GPA calculator: UT Austin college GPA on its plus/minus scale (no A+) and UT Knoxville's weighted core GPA for admission, with each school's official rules.",
+  "asu-gpa-calculator": "Calculate your ASU GPA on Arizona State's plus/minus scale: A+ = 4.33 per course, cumulative GPA capped at 4.00, no C-, D+ or D-, and E for a failing grade.",
   "sat-score-calculator": "Estimate your digital SAT score from the questions you got right in Reading and Writing and in Math, adjusted for whether your second module was harder or easier.",
 };
 

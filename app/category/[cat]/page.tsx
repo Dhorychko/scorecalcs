@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ cat: stri
   const { cat } = await params;
   const c = CAT_BY_SLUG[cat];
   if (!c) return {};
-  return { title: c.name.replace(/^./, (x) => x.toUpperCase()), description: metaDesc(`Free ${c.name.toLowerCase()} for students. ${c.blurb}`, "No sign-up, works on your phone."), alternates: { canonical: `/category/${cat}/` } };
+  return { title: c.name.replace(/^./, (x) => x.toUpperCase()), description: metaDesc(`Free ${c.name.toLowerCase()} for students. ${c.blurb}`, "No sign-up, works on your phone."), alternates: { canonical: cat === "ap" ? "/ap-score-calculator/" : `/category/${cat}/` } };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ cat: string }> }) {

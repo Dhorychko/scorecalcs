@@ -293,6 +293,118 @@ export const CONTENT: Record<string, Content> = {
     ],
     related: ["sat-score-calculator", "act-score-calculator", "ap-score-calculator", "high-school-gpa-calculator"],
   },
+  "uc-gpa-calculator": {
+    intro: "Calculate your GPA the way the University of California does. UC uses only A–G courses from 10th and 11th grade, ignores plus and minus, and adds honors points for UC-approved honors, AP and IB courses — capped at eight semesters.",
+    steps: [
+      "Enter one row per semester grade in an A–G course taken from the summer after 9th grade through the summer after 11th grade. A year-long class is two rows.",
+      "Drop the plus or minus: an A- is an A, a B+ is a B.",
+      "Tick UC honors / AP / IB for UC-approved honors-level courses and transferable college courses.",
+      "Read the capped weighted GPA (the one UC uses for its 3.0 minimum and most comparisons), plus the unweighted and fully weighted versions.",
+    ],
+    formula: [
+      "Unweighted = (A=4, B=3, C=2, D=1, F=0 summed) ÷ number of semester grades",
+      "Capped weighted = (points + honors points, max 8 and no more than 4 from 10th grade) ÷ number of grades",
+      "Honors points only count for grades of C or better",
+    ],
+    example: "12 semester grades, 6 honors semesters (2 in 10th, 4 in 11th) with A's and B's: every honors point fits under the cap, so capped and fully weighted GPA match.",
+    tips: [
+      "9th and 12th grade don't count toward the UC GPA, though UC still sees them on your application.",
+      "A D or F in an A–G course can be replaced by repeating it with a better grade by the summer after 11th grade.",
+      "For non-residents, only AP and IB courses earn honors points — school-designated honors classes don't.",
+      "Each UC campus also reports a fully weighted GPA in its admitted-student profiles, so it's worth knowing both numbers.",
+    ],
+    faq: [
+      { q: "What GPA do you need for UC?", a: "The minimum is a 3.0 UC GPA for California residents and 3.4 for non-residents. Admitted students at the most selective campuses (UCLA, Berkeley) usually have capped GPAs near 4.0 and fully weighted GPAs above 4.2." },
+      { q: "What's the difference between capped and fully weighted UC GPA?", a: "Capped GPA counts at most 8 semesters of honors points, with no more than 4 from 10th grade. Fully weighted GPA counts every UC-approved honors, AP, IB or college semester with a C or better." },
+      { q: "Does UC count plus and minus grades?", a: "No. An A- counts as an A (4 points) and a B+ as a B (3 points) for high school courses." },
+      { q: "Do 9th grade grades count for UC?", a: "Not in the UC GPA. Only A–G courses from the summer after 9th grade through the summer after 11th grade count, but you still need to complete the A–G requirements across all four years." },
+    ],
+    related: ["weighted-gpa-calculator", "high-school-gpa-calculator", "ap-score-calculator", "unweighted-gpa-calculator"],
+  },
+  "uf-gpa-calculator": {
+    intro: "Estimate the GPA the University of Florida recalculates for freshman admission. UF counts core academic courses only, gives +1.0 for AP, IB, AICE and dual enrollment and +0.5 for honors, on a 4.0 base scale.",
+    steps: [
+      "Enter your core courses: English, math, science, history (social science) and foreign language.",
+      "Add electives only if they're AP, IB or AICE — UF leaves other electives out.",
+      "Choose each course's level so the right bonus is added.",
+      "Use whole letter grades. UF doesn't publish how it treats plus and minus, so this follows its stated 4.0 scale.",
+    ],
+    formula: ["Recalculated GPA = Σ ((grade points + bonus) × credits) ÷ Σ credits", "A = 4, B = 3, C = 2, D = 1, F = 0; +1.0 AP/IB/AICE/dual enrollment, +0.5 honors/pre-AP/pre-IB/pre-AICE"],
+    tips: [
+      "UF reports a middle 50% weighted GPA of about 4.5–4.7 for admitted freshmen — that's this recalculated number, not your school's GPA.",
+      "Dual-enrollment courses get the same +1.0 as AP under Florida Board of Governors rules.",
+      "Course rigor matters: the recalculation rewards AP, IB, AICE and dual enrollment more than any other choice you control.",
+    ],
+    faq: [
+      { q: "What GPA do you need to get into UF?", a: "UF's admitted freshmen typically have a recalculated weighted core GPA between about 4.5 and 4.7. Admission is holistic, so GPA, rigor, essays and activities all count." },
+      { q: "Does UF recalculate GPA?", a: "Yes. UF recalculates a core weighted GPA from English, math, science, history and foreign language courses, plus AP, IB and AICE electives." },
+      { q: "Does UF count plus and minus grades?", a: "UF's published rules don't say. This calculator uses whole letter grades on UF's stated 4.0 base scale." },
+    ],
+    related: ["weighted-gpa-calculator", "high-school-gpa-calculator", "uc-gpa-calculator", "ap-score-calculator"],
+  },
+  "ut-gpa-calculator": {
+    intro: "Two UT calculators in one. Switch to UT Austin to calculate a college GPA on Austin's plus/minus scale (no A+), or to UT Knoxville to estimate the weighted core GPA the University of Tennessee uses for freshman admission.",
+    steps: [
+      "Pick UT Austin or UT Knoxville at the top of the course list.",
+      "UT Austin: enter each course with its letter grade and credit hours. Leave out courses graded W, Q, I, X, S, U or CR.",
+      "UT Knoxville: enter your core high school courses and mark honors, AP, IB, Cambridge and dual-enrollment classes.",
+    ],
+    formula: [
+      "UT Austin: A = 4.00, A- = 3.67, B+ = 3.33, B = 3.00 … D- = 0.67, F = 0; GPA = Σ (points × hours) ÷ Σ hours",
+      "UT Knoxville core GPA: +0.5 honors, +1.0 AP/IB/Cambridge/dual enrollment, added to unweighted grades",
+    ],
+    tips: [
+      "UT Austin freshman admission doesn't use a recalculated GPA: Texas students in the top 5% of their class are admitted automatically (for 2026–28), and others are reviewed holistically starting with class rank.",
+      "UT Knoxville's core GPA uses 16 courses: 4 English, 4 math, 3 science, 1 U.S. history, 1 world or European history, 2 of one foreign language and 1 arts course.",
+      "A 4.0+ UT core GPA is one of the routes to guaranteed admission for Tennessee residents.",
+    ],
+    faq: [
+      { q: "Does UT Austin have an A+?", a: "No. UT Austin's highest grade is an A, worth 4.00. An A- is 3.67 and a B+ is 3.33." },
+      { q: "What GPA do you need for UT Austin?", a: "For Texas residents, UT Austin admits most students by class rank: the top 5% of a Texas high school class is admitted automatically. There's no published GPA cutoff for holistic review." },
+      { q: "How does UT Knoxville calculate GPA?", a: "It takes your unweighted grades in 16 core courses and adds 0.5 for honors and 1.0 for AP, IB, Cambridge and dual-enrollment courses, on a 4-point base scale." },
+    ],
+    related: ["college-gpa-calculator", "cumulative-gpa-calculator", "weighted-gpa-calculator", "asu-gpa-calculator"],
+  },
+  "asu-gpa-calculator": {
+    intro: "Calculate your Arizona State University GPA on ASU's plus/minus scale. An A+ is worth 4.33 for a course, but ASU caps the cumulative GPA at 4.00, and there are no C-, D+ or D- grades.",
+    steps: [
+      "Enter each ASU course with its letter grade and credit hours.",
+      "Leave out W, X, Y and other non-graded marks — they don't count in the GPA.",
+      "If your average goes above 4.00 because of A+ grades, the result shows the capped GPA and the uncapped number.",
+    ],
+    formula: ["A+ = 4.33, A = 4.00, A- = 3.67, B+ = 3.33, B = 3.00, B- = 2.67, C+ = 2.33, C = 2.00, D = 1.00, E = 0", "GPA = Σ (points × hours) ÷ Σ hours, capped at 4.00"],
+    tips: [
+      "Freshman admission uses a different number: an unweighted GPA in ASU's competency courses, where 3.00 is one of the admission routes and each subject area needs at least 2.00.",
+      "Transfer and graduate programs often recalculate GPA with their own scale, so keep the uncapped number handy.",
+    ],
+    faq: [
+      { q: "Does ASU give an A+?", a: "Yes. An A+ is worth 4.33 grade points for the course, but ASU caps the cumulative GPA at 4.00." },
+      { q: "What is an E at ASU?", a: "E is ASU's failing grade, worth 0 points. ASU doesn't use F." },
+      { q: "What GPA do you need to get into ASU?", a: "One admission route is a 3.00 unweighted GPA in ASU's competency courses (math, English, lab science, social science, second language and fine arts or CTE), with at least 2.00 in each area." },
+    ],
+    related: ["college-gpa-calculator", "cumulative-gpa-calculator", "ut-gpa-calculator", "raise-gpa-calculator"],
+  },
+  "lsac-gpa-calculator": {
+    intro: "Calculate your law school GPA the way LSAC does. The Credential Assembly Service converts every graded undergraduate course to a 4.33 scale, where an A+ is worth 4.33 — so your LSAC GPA can differ from your transcript GPA.",
+    steps: [
+      "Enter every graded course taken before your first bachelor's degree, at every college you attended.",
+      "Include repeated courses each time they appear on your transcript — LSAC counts both grades.",
+      "Leave out pass/fail passes and non-punitive withdrawals.",
+      "Mark dual-enrollment courses taken in high school: starting with the 2027–28 cycle they're excluded.",
+    ],
+    formula: ["A+ = 4.33, A = 4.00, A- = 3.67, B+ = 3.33, B = 3.00, B- = 2.67, C+ = 2.33, C = 2.00, C- = 1.67, D+ = 1.33, D = 1.00, D- = 0.67, F = 0", "LSAC GPA = Σ (points × credit hours) ÷ Σ credit hours"],
+    tips: [
+      "If your school doesn't give A+ grades, your LSAC GPA can't go above 4.00 — and if it does, A+ grades can lift you above your transcript GPA.",
+      "Grades removed under academic forgiveness count unless they no longer appear on the transcript.",
+      "Graduate and post-degree coursework never counts toward the LSAC GPA.",
+    ],
+    faq: [
+      { q: "Why is my LSAC GPA different from my college GPA?", a: "LSAC uses its own conversion (A+ = 4.33), counts every repeated attempt and combines grades from every school you attended, including community college and summer courses." },
+      { q: "Do dual-enrollment classes count for LSAC GPA?", a: "Through the 2026–27 cycle they count if they're on a college transcript. Starting with the 2027–28 application cycle, college courses taken while in high school are excluded." },
+      { q: "Do withdrawals count in LSAC GPA?", a: "A W counts only if your school treats it as punitive. Withdrawals that your school considers failing grades are counted as failures." },
+    ],
+    related: ["college-gpa-calculator", "cumulative-gpa-calculator", "raise-gpa-calculator", "gpa-to-percentage-calculator"],
+  },
   "percentage-to-gpa-calculator": {
     intro: "Convert a percentage grade to a letter grade and grade points on the 4.0 scale, using the College Board's conversion table.",
     steps: ["Enter your percentage.", "See the letter grade and the 4.0-scale value; the table highlights your band."],

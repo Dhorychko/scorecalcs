@@ -26,7 +26,7 @@ export default function ApHub() {
       <Schema crumbs={[["Home", "/"], ["AP score calculators", "/ap-score-calculator/"]]} faq={FAQ} />
       <div className="hero">
         <div className="wrap">
-          <nav className="crumbs" aria-label="Breadcrumb"><Link href="/">Home</Link> / <Link href="/category/ap/">AP</Link></nav>
+          <nav className="crumbs" aria-label="Breadcrumb"><Link href="/">Home</Link></nav>
           <h1>AP Score Calculator</h1>
           <p className="lede">{INTRO}</p>
           {AP_GROUPS.map((g) => {

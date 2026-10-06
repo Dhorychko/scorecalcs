@@ -46,7 +46,7 @@ export default async function ApPage({ params }: { params: Promise<{ exam: strin
           <nav className="crumbs" aria-label="Breadcrumb"><Link href="/">Home</Link> / <Link href="/ap-score-calculator/">AP score calculators</Link></nav>
           <h1>{e.name} Score Calculator</h1>
           <p className="lede">{apIntro(e)}</p>
-          <ApCalc slug={e.slug} />
+          <ApCalc exam={e} />
         </div>
       </div>
       <div className="wrap article">

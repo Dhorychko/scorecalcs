@@ -1,10 +1,10 @@
-"use client";
-
+// Server component: picks the one client calculator a page needs, so each page ships only its own code.
 import { CALC_BY_SLUG } from "@/lib/catalog";
 import GpaCalc, { CumulativeCalc, RaiseCalc } from "./GpaCalc";
 import { FinalCalc, SemesterCalc, TestCalc, WeightedCalc } from "./GradeCalc";
 import { ActCalc, SatCalc } from "./TestCalc";
 import { GpaToPct, LetterToGpa, PctToGpa, ScaleCalc } from "./ConvertCalc";
+import SchoolCalc, { UcCalc } from "./SchoolCalc";
 
 export default function Calculator({ slug }: { slug: string }) {
   const c = CALC_BY_SLUG[slug];
@@ -24,5 +24,7 @@ export default function Calculator({ slug }: { slug: string }) {
     case "gpa2pct": return <GpaToPct />;
     case "letter2gpa": return <LetterToGpa />;
     case "scale": return <ScaleCalc />;
+    case "school": return <SchoolCalc set={c.set!} />;
+    case "uc": return <UcCalc />;
   }
 }

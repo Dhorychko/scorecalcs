@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { AP_BY_SLUG, apScore, composite, defaults, mcNeeded } from "@/lib/ap";
+import { apScore, composite, defaults, mcNeeded } from "@/lib/apMath";
+import type { ApExam } from "@/lib/apTypes";
 import { Mark, MobileBar, Sheet, Tally, num } from "./parts";
 
-export default function ApCalc({ slug }: { slug: string }) {
-  const e = AP_BY_SLUG[slug];
+export default function ApCalc({ exam: e }: { exam: ApExam }) {
   const d = defaults(e);
   const [mc, setMc] = useState(String(d.mc));
   const [frq, setFrq] = useState(d.frq.map(String));
@@ -28,7 +28,8 @@ export default function ApCalc({ slug }: { slug: string }) {
                 <input id="mc" type="number" inputMode="numeric" min={0} max={e.mc.count} step={1} value={mc} onChange={(x) => setMc(x.target.value)} onFocus={(x) => x.target.select()} />
                 <span className="of">of {e.mc.count}</span>
               </div>
-              <span className="help">No penalty for wrong answers. {e.mc.note ?? ""}</span>
+              {num(mc) > e.mc.count ? <span className="help warn">The section has {e.mc.count} questions — counted as {e.mc.count}.</span>
+                : <span className="help">No penalty for wrong answers. {e.mc.note ?? ""}</span>}
             </label>
           </div>
         </>}
@@ -43,6 +44,7 @@ export default function ApCalc({ slug }: { slug: string }) {
                   onChange={(x) => setFrq((p) => p.map((v, j) => (j === i ? x.target.value : v)))} onFocus={(x) => x.target.select()} />
                 <span className="of">{f.max === 100 ? "%" : `of ${f.max}`}</span>
               </div>
+              {num(frq[i]) > f.max && <span className="help warn">Maximum is {f.max} — counted as {f.max}.</span>}
             </label>
           </div>
         ))}

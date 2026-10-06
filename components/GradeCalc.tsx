@@ -82,11 +82,11 @@ export function FinalCalc() {
           </div>
         </div>
       </Sheet>
-      <Mark label="You need on the final" value={need <= 0 ? "0" : fmt(need, 1)} unit="%"
-        sub={need > 100 ? <span className="warn">More than 100% — not reachable unless there&apos;s extra credit.</span> : need <= 0 ? <>You&apos;ve already got it, even with a zero.</> : <>That&apos;s {/^[AEF]/.test(percentToLetter(need)) ? "an" : "a"} <b>{percentToLetter(need)}</b> on the final.</>}>
+      <Mark label="You need on the final" value={!isFinite(need) ? "—" : need <= 0 ? "0" : fmt(need, 1)} unit={isFinite(need) ? "%" : undefined}
+        sub={!isFinite(need) ? <span className="warn">Enter how much the final is worth (more than 0%).</span> : need > 100 ? <span className="warn">More than 100% — not reachable unless there&apos;s extra credit.</span> : need <= 0 ? <>You&apos;ve already got it, even with a zero.</> : <>That&apos;s {/^[AEF]/.test(percentToLetter(need)) ? "an" : "a"} <b>{percentToLetter(need)}</b> on the final.</>}>
         <Tally rows={[["If you ace it (100%)", `${fmt(ifPerfect, 1)}%`], ["If you skip it (0%)", `${fmt(ifZero, 1)}%`]]} />
       </Mark>
-      <MobileBar label="Needed on final" value={need <= 0 ? "0%" : `${fmt(need, 1)}%`} />
+      <MobileBar label="Needed on final" value={!isFinite(need) ? "—" : need <= 0 ? "0%" : `${fmt(need, 1)}%`} />
     </div>
   );
 }
@@ -117,7 +117,7 @@ export function TestCalc() {
           </div>
         </div>
       </Sheet>
-      <Mark label="Test grade" value={fmt(pct, 1)} unit="%" sub={<>{fmt(num(total) - num(wrong), 1)} of {fmt(num(total), 0)} right — {/^[AEF]/.test(percentToLetter(pct)) ? "an" : "a"} <b>{percentToLetter(pct)}</b>.</>}>
+      <Mark label="Test grade" value={fmt(pct, 1)} unit="%" sub={num(total) <= 0 ? <span className="warn">Enter the number of questions.</span> : num(wrong) > num(total) ? <span className="warn">More wrong answers than questions — check the numbers.</span> : <>{fmt(num(total) - num(wrong), 1)} of {fmt(num(total), 0)} right — {/^[AEF]/.test(percentToLetter(pct)) ? "an" : "a"} <b>{percentToLetter(pct)}</b>.</>}>
         <Tally rows={[["Each question is worth", num(total) > 0 ? `${fmt(100 / num(total), 2)}%` : "—"]]} />
       </Mark>
       <MobileBar label="Test grade" value={`${fmt(pct, 1)}%`} />

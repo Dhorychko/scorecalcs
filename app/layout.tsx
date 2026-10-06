@@ -1,12 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import "@fontsource/atkinson-hyperlegible/400.css";
-import "@fontsource/atkinson-hyperlegible/700.css";
-import "@fontsource/bricolage-grotesque/700.css";
-import "@fontsource/bricolage-grotesque/800.css";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 import { CATEGORIES } from "@/lib/catalog";
+import { body, display } from "./fonts";
+import Analytics from "@/components/Analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -14,18 +12,20 @@ export const metadata: Metadata = {
   description: SITE.description,
   openGraph: { siteName: SITE.name, type: "website", locale: "en_US", images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE.name }] },
   twitter: { card: "summary_large_image" },
+  // Set NEXT_PUBLIC_GSC_VERIFICATION in Vercel to the code from Google Search Console (HTML tag method).
+  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#ffffff" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${body.variable} ${display.variable}`}>
       <body>
         <header className="site-head">
           <div className="wrap">
-            <Link href="/" className="logo" aria-label={`${SITE.name} home`}>
-              Sc<span className="dot" aria-hidden="true" />reCalcs
+            <Link href="/" className="logo">
+              Sc<span className="dot" aria-hidden="true" /><span className="sr-only">o</span>reCalcs
             </Link>
             <nav className="site-nav" aria-label="Main">
               <Link href="/gpa-calculator/">GPA</Link>
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <h2>Calculators</h2>
               <ul>
                 {CATEGORIES.map((c) => (
-                  <li key={c.slug}><Link href={`/category/${c.slug}/`}>{c.name}</Link></li>
+                  <li key={c.slug}><Link href={c.slug === "ap" ? "/ap-score-calculator/" : `/category/${c.slug}/`}>{c.name}</Link></li>
                 ))}
               </ul>
             </div>
@@ -71,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );

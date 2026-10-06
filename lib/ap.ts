@@ -4,23 +4,9 @@
 // Score distributions: College Board, May 2026 (apstudents.collegeboard.org/about-ap-scores/score-distributions).
 // Cutoffs: College Board does not publish them. Ours are estimates (see CUTS) and are labelled as such.
 
-export type FrqItem = { label: string; max: number; weight: number }; // weight = share of the whole exam (0–1)
-export type ApExam = {
-  slug: string;
-  name: string; // "AP Biology"
-  short: string; // "AP Bio" — the way students search
-  group: "STEM" | "English" | "History & Social Science" | "Arts" | "World Languages";
-  mc: { count: number; weight: number; minutes: number; note?: string };
-  frq: FrqItem[];
-  frqMinutes: number;
-  dist2026: { pass: number; five: number }; // % scoring 3+, % scoring 5
-  cut: Cuts;
-  formatYear: 2026 | 2027;
-  note?: string; // shown on the page (format changes, unverified items)
-  keyword: string; // main search phrase
-};
-
-export type Cuts = { five: number; four: number; three: number; two: number }; // share of composite (0–1)
+import type { ApExam, Cuts, FrqItem } from "./apTypes.ts";
+export type { ApExam, Cuts, FrqItem } from "./apTypes.ts";
+export { totalWeight, composite, apScore, mcNeeded, defaults } from "./apMath.ts";
 
 // Estimated curves. Calculus AB uses widely cited 108-point composite ranges (5 ≈ 69+, 4 ≈ 57+, 3 ≈ 45+, 2 ≈ 37+);
 // Calculus BC uses the released 2012 exam ranges. Others are grouped by how generous the exam's
@@ -175,7 +161,41 @@ const RAW: Raw[] = [
     mc: { count: 80, weight: 0.5, minutes: 60 }, frqMinutes: 120,
     frq: byPoints([["Long essay: comparison", 8], ["Long essay: visual/contextual", 6], ["Short essay 3", 5], ["Short essay 4", 5], ["Short essay 5", 5], ["Short essay 6", 5]], 0.5),
     dist2026: { pass: 67, five: 15 } },
+  { slug: "music-theory", name: "AP Music Theory", short: "AP Music Theory", group: "Arts", keyword: "ap music theory score calculator", formatYear: 2027,
+    mc: { count: 75, weight: 0.45, minutes: 80, note: "Aural and non-aural questions" }, frqMinutes: 80,
+    frq: [
+      ...byPoints([["Melodic dictation 1", 9], ["Melodic dictation 2", 9], ["Harmonic dictation 3", 24], ["Harmonic dictation 4", 24],
+        ["Part writing from figured bass", 25], ["Part writing from Roman numerals", 18], ["Harmonization of a melody", 9]], 0.45),
+      ...equal([["Sight-singing 1", 9], ["Sight-singing 2", 9]], 0.1),
+    ],
+    dist2026: { pass: 59, five: 18 },
+    note: "The written free response is worth 45% and sight-singing 10%. Point maximums are from the 2026 scoring guidelines; College Board publishes section weights only, so each written question counts in proportion to its points. From May 2027 the exam moves to hybrid digital format in Bluebook with no change in structure.",
+    tips: [
+      "Harmonic dictation and part writing carry most of the written points (24, 24, 25 and 18 of 118) — that's where practice pays off most.",
+      "Melodic dictation gives a point per correct half-measure segment, so partial answers still score.",
+      "In sight-singing, keep going after a mistake: hesitations and restarts cost the bonus point.",
+    ] },
   // ---------- World Languages ----------
+  { slug: "chinese-language", name: "AP Chinese Language and Culture", short: "AP Chinese", group: "World Languages", keyword: "ap chinese score calculator", formatYear: 2027,
+    mc: { count: 55, weight: 0.5, minutes: 65, note: "Part A: 25 listening questions; Part B: 30 reading questions" }, frqMinutes: 45,
+    frq: [
+      { label: "Project presentation (as % of rubric)", max: 100, weight: 0.2 },
+      { label: "Project Q&A (as % of rubric)", max: 100, weight: 0.15 },
+      { label: "Story narration (as % of rubric)", max: 100, weight: 0.075 },
+      { label: "Email response (as % of rubric)", max: 100, weight: 0.075 },
+    ],
+    dist2026: { pass: 85, five: 48 },
+    note: "Uses the redesigned May 2027 exam: digital in Bluebook, free response first (project presentation 20%, project Q&A 15%, story narration 7.5%, email 7.5%), then 25 listening and 30 reading questions (25% each). College Board hasn't published the new scoring rubrics yet, so enter each task as the share of rubric points you expect." },
+  { slug: "japanese-language", name: "AP Japanese Language and Culture", short: "AP Japanese", group: "World Languages", keyword: "ap japanese score calculator", formatYear: 2027,
+    mc: { count: 55, weight: 0.5, minutes: 65, note: "Part A: 25 listening questions; Part B: 30 reading questions" }, frqMinutes: 45,
+    frq: [
+      { label: "Project presentation (as % of rubric)", max: 100, weight: 0.2 },
+      { label: "Project Q&A (as % of rubric)", max: 100, weight: 0.15 },
+      { label: "Story narration (as % of rubric)", max: 100, weight: 0.075 },
+      { label: "Email response (as % of rubric)", max: 100, weight: 0.075 },
+    ],
+    dist2026: { pass: 72, five: 47 },
+    note: "Uses the redesigned May 2027 exam: digital in Bluebook, free response first (project presentation 20%, project Q&A 15%, story narration 7.5%, email 7.5%), then 25 listening and 30 reading questions (25% each). College Board hasn't published the new scoring rubrics yet, so enter each task as the share of rubric points you expect." },
   { slug: "spanish-language", name: "AP Spanish Language and Culture", short: "AP Spanish", group: "World Languages", keyword: "ap spanish score calculator",
     mc: { count: 65, weight: 0.5, minutes: 95, note: "Part A: 30 reading questions; Part B: 35 questions with audio" }, frqMinutes: 85,
     frq: LANG_FRQ(), dist2026: { pass: 83, five: 21 }, note: LANG_NOTE },
@@ -198,33 +218,3 @@ export const AP_EXAMS: ApExam[] = RAW.map((r) => ({ ...r, cut: r.cut ?? curveFor
 export const AP_BY_SLUG: Record<string, ApExam> = Object.fromEntries(AP_EXAMS.map((e) => [e.slug, e]));
 export const AP_GROUPS = ["STEM", "English", "History & Social Science", "Arts", "World Languages"] as const;
 
-export function totalWeight(e: ApExam): number {
-  return e.mc.weight + e.frq.reduce((a, f) => a + f.weight, 0);
-}
-
-/** Composite as a share (0–1) of the maximum. */
-export function composite(e: ApExam, mcCorrect: number, frqPoints: number[]): number {
-  const mc = e.mc.count ? (Math.min(Math.max(mcCorrect, 0), e.mc.count) / e.mc.count) * e.mc.weight : 0;
-  const fr = e.frq.reduce((a, f, i) => a + (Math.min(Math.max(frqPoints[i] ?? 0, 0), f.max) / f.max) * f.weight, 0);
-  return (mc + fr) / totalWeight(e);
-}
-
-export function apScore(share: number, c: Cuts): 1 | 2 | 3 | 4 | 5 {
-  if (share >= c.five) return 5;
-  if (share >= c.four) return 4;
-  if (share >= c.three) return 3;
-  if (share >= c.two) return 2;
-  return 1;
-}
-
-/** Multiple-choice correct answers needed for a target score, given FRQ points. Returns null if impossible. */
-export function mcNeeded(e: ApExam, target: number, frqPoints: number[]): number | null {
-  const cut = target === 5 ? e.cut.five : target === 4 ? e.cut.four : target === 3 ? e.cut.three : e.cut.two;
-  for (let k = 0; k <= e.mc.count; k++) if (composite(e, k, frqPoints) >= cut) return k;
-  return null;
-}
-
-/** Default inputs: a solid "about a 4" student — 70% of MC, 60% of FRQ points. */
-export function defaults(e: ApExam): { mc: number; frq: number[] } {
-  return { mc: Math.round(e.mc.count * 0.7), frq: e.frq.map((f) => Math.round(f.max * 0.6)) };
-}

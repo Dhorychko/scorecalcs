@@ -67,7 +67,7 @@ export function apFaq(e: ApExam): { q: string; a: string }[] {
 }
 
 export function apTips(e: ApExam): string[] {
-  return GROUP_TIPS[e.group];
+  return e.tips ?? GROUP_TIPS[e.group];
 }
 
 export function apFormatRows(e: ApExam): { section: string; detail: string; time: string; weight: string }[] {

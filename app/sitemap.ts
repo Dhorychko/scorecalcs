@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: u("/ap-score-calculator/"), lastModified: now },
     ...AP_EXAMS.map((e) => ({ url: u(`/ap/${e.slug}/`), lastModified: now })),
     ...GPA_VALUES.map((g) => ({ url: u(`/gpa/${gpaSlug(g)}/`), lastModified: now })),
-    ...CATEGORIES.map((c) => ({ url: u(`/category/${c.slug}/`), lastModified: now })),
+    ...CATEGORIES.filter((c) => c.slug !== "ap").map((c) => ({ url: u(`/category/${c.slug}/`), lastModified: now })),
     { url: u("/methodology/"), lastModified: now },
     { url: u("/about/"), lastModified: now },
   ];

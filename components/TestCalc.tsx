@@ -27,6 +27,7 @@ export function SatCalc({ psat = false }: { psat?: boolean }) {
   const rwS = fn("rw", num(rw), rwMod);
   const mS = fn("math", num(m), mMod);
   const total = rwS + mS;
+  const over = num(rw) > SAT.rw.questions || num(m) > SAT.math.questions;
   const lo = psat ? 320 : 400, hi = psat ? 1520 : 1600;
   return (
     <div className="calc">
@@ -42,7 +43,7 @@ export function SatCalc({ psat = false }: { psat?: boolean }) {
           <ModulePick id="mm" value={mMod} onChange={setMMod} />
         </div>
       </Sheet>
-      <Mark label={psat ? "Estimated PSAT score" : "Estimated SAT score"} value={String(total)} sub={<>Likely range {Math.max(lo, total - 2 * SAT_RANGE)}–{Math.min(hi, total + 2 * SAT_RANGE)} on a {lo}–{hi} scale.</>}>
+      <Mark label={psat ? "Estimated PSAT score" : "Estimated SAT score"} value={String(total)} sub={over ? <span className="warn">More right answers than questions in a section — counted at the maximum.</span> : <>Likely range {Math.max(lo, total - 2 * SAT_RANGE)}–{Math.min(hi, total + 2 * SAT_RANGE)} on a {lo}–{hi} scale.</>}>
         <Tally rows={[
           ["Reading and Writing", String(rwS)],
           ["Math", String(mS)],
@@ -66,6 +67,7 @@ export function ActCalc() {
   const rS = actSection(num(r), ACT.reading.questions);
   const sS = actSection(num(s), ACT.science.questions);
   const comp = actComposite(eS, mS, rS);
+  const over = num(e) > 50 || num(m) > 45 || num(r) > 36 || (sci && num(s) > 40);
   return (
     <div className="calc">
       <Sheet title="ACT: questions right">
@@ -79,7 +81,7 @@ export function ActCalc() {
         </div>
         <div className="row"><div className="toggle"><label><input type="checkbox" checked={sci} onChange={(x) => setSci(x.target.checked)} /> I&apos;m taking the Science section</label></div></div>
       </Sheet>
-      <Mark label="Estimated ACT composite" value={String(comp)} sub={<>Average of English, Math and Reading, on a 1–36 scale.</>}>
+      <Mark label="Estimated ACT composite" value={String(comp)} sub={over ? <span className="warn">One section has more right answers than questions — it&apos;s counted at the maximum.</span> : <>Average of English, Math and Reading, on a 1–36 scale.</>}>
         <Tally rows={[
           ["English", String(eS)], ["Math", String(mS)], ["Reading", String(rS)],
           ...(sci ? [["Science", String(sS)], ["STEM score", String(actStem(mS, sS))]] as [string, string][] : []),

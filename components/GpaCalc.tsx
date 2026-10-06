@@ -127,8 +127,8 @@ export function CumulativeCalc() {
           <NumField id="tc" label="Term credits" value={termCr} onChange={setTermCr} step="0.5" />
         </div>
       </Sheet>
-      <Mark label="New cumulative GPA" value={fmt(g)} sub={<>{change >= 0 ? "Up" : "Down"} {fmt(Math.abs(change))} from {fmt(num(prior))}.</>}>
-        <Tally rows={[["Total credits", fmt(num(priorCr) + num(termCr), 1)], ["Total quality points", fmt(num(prior) * num(priorCr) + num(term) * num(termCr), 1)], ["Letter equivalent", pointsToLetter(g)]]} />
+      <Mark label="New cumulative GPA" value={num(priorCr) + num(termCr) > 0 ? fmt(g) : "—"} sub={num(priorCr) + num(termCr) > 0 ? <>{change >= 0 ? "Up" : "Down"} {fmt(Math.abs(change))} from {fmt(num(prior))}.</> : <span className="warn">Enter your credits.</span>}>
+        <Tally rows={[["Total credits", fmt(num(priorCr) + num(termCr), 1)], ["Total quality points", fmt(num(prior) * num(priorCr) + num(term) * num(termCr), 1)], ["Letter equivalent", num(priorCr) + num(termCr) > 0 ? pointsToLetter(g) : "—"]]} />
       </Mark>
       <MobileBar label="Cumulative GPA" value={fmt(g)} />
     </div>
@@ -143,7 +143,8 @@ export function RaiseCalc({ preset }: { preset?: number }) {
   const [next, setNext] = useState("30");
   const need = requiredGpa(num(cur), num(done), num(target), num(next));
   const best = maxReachable(num(cur), num(done), num(next));
-  const impossible = need > 4.0001;
+  const noCredits = !(num(next) > 0);
+  const impossible = !noCredits && need > 4.0001;
   const already = need <= num(cur) && num(target) <= num(cur);
   return (
     <div className="calc">
@@ -157,8 +158,8 @@ export function RaiseCalc({ preset }: { preset?: number }) {
           <NumField id="rn" label="Credits still to take" value={next} onChange={setNext} step="1" help="One semester is usually 15 college credits or 6–7 high school credits" />
         </div>
       </Sheet>
-      <Mark label="GPA you need on those credits" value={impossible ? "4.0+" : fmt(Math.max(0, need))}
-        sub={impossible ? <span className="warn">Not reachable in {num(next)} credits — even straight A&apos;s get you to {fmt(best)}.</span>
+      <Mark label="GPA you need on those credits" value={noCredits ? "—" : impossible ? "4.0+" : fmt(Math.max(0, need))}
+        sub={noCredits ? <span className="warn">Enter how many credits you still have to take.</span> : impossible ? <span className="warn">Not reachable in {num(next)} credits — even straight A&apos;s get you to {fmt(best)}.</span>
           : already ? <>You&apos;re already at or above that target.</> : <>That&apos;s about a{/^[AEFIO]/.test(pointsToLetter(need)) ? "n" : ""} <b>{pointsToLetter(need)}</b> average.</>}>
         <Tally rows={[["Best possible with straight A's", fmt(best)], ["Credits after this", fmt(num(done) + num(next), 0)]]} />
       </Mark>

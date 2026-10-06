@@ -92,7 +92,7 @@ export function ScaleCalc() {
         </div>
       </Sheet>
       <Mark label="On a 4.0 scale" value={fmt(Math.min(4, convertScale(num(g), num(from), 4)))}>
-        <Tally rows={scales.filter((s) => String(s) !== from).map((s) => [`Out of ${s}`, fmt(convertScale(num(g), num(from), s), s >= 10 ? 1 : 2)] as [string, string])} />
+        <Tally rows={scales.filter((s) => String(s) !== from && s !== 4).map((s) => [`Out of ${s}`, fmt(convertScale(num(g), num(from), s), s >= 10 ? 1 : 2)] as [string, string])} />
         <p className="note">A straight proportional conversion. Colleges usually recalculate GPAs with their own rules, so treat this as a rough comparison.</p>
       </Mark>
       <MobileBar label="4.0 scale" value={fmt(Math.min(4, convertScale(num(g), num(from), 4)))} />
